@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>럭키비키! 원영적 사고 감사일기</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Pastel Dream -->
+    <!-- Application Structure Plan: 이 애플리케이션은 초등학생을 위한 대화형 디지털 활동지로 설계되었습니다. 사용자는 상단의 탭 버튼을 사용하여 네 가지 글쓰기 프레임워크('사건 전환형', '감사 나열형' 등) 중 하나를 선택할 수 있습니다. 선택 시 하단 콘텐츠 영역이 동적으로 변경되어 해당 프레임워크의 작성 가이드, 예시 글, 그리고 사용자가 직접 글을 입력할 수 있는 텍스트 영역을 보여줍니다. 이 구조는 학생들이 지루하지 않게 다양한 글쓰기 방식을 탐색하고, 즉각적으로 실습할 수 있도록 유도하여 학습 효과와 재미를 극대화하기 위해 선택되었습니다. -->
+    <!-- Visualization & Content Choices: 이 앱은 텍스트 기반 콘텐츠를 다루므로 복잡한 차트는 사용하지 않았습니다. 대신, 사용자의 선택에 따라 콘텐츠를 동적으로 보여주는 UI/UX 디자인에 집중했습니다. 정보(글쓰기 틀, 예시) -> 목표(학생의 글쓰기 활동 지원) -> 표현 방식(탭 기반의 동적 콘텐츠 표시) -> 상호작용(버튼 클릭으로 콘텐츠 전환, 텍스트 입력 및 복사) -> 정당성(학생들이 쉽고 재미있게 각 프레임워크를 이해하고 연습하도록 지원) -> 구현(Vanilla JS, Tailwind CSS). 이 방식은 텍스트 콘텐츠를 가장 효과적으로 탐색하고 활용하게 합니다. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        .tab-button.active {
+            background-color: #fdba74; /* orange-300 */
+            color: #854d0e; /* amber-800 */
+            font-weight: 700;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .content-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: all 0.3s ease-in-out;
+        }
+        .prompt-list li {
+            background-color: #fef3c7; /* amber-100 */
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .example-box {
+            background-color: #f0fdf4; /* green-50 */
+            border-left: 4px solid #4ade80; /* green-400 */
+            padding: 1rem;
+            border-radius: 0.25rem;
+            margin-top: 1.5rem;
+        }
+        textarea {
+            resize: vertical;
+        }
+    </style>
+</head>
+<body class="bg-amber-50 text-gray-800 antialiased">
+
+    <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl">
+        
+        <header class="text-center mb-8">
+            <h1 class="text-4xl sm:text-5xl font-bold text-amber-600">🍀 럭키비키! 🍀</h1>
+            <p class="text-xl sm:text-2xl mt-2 text-amber-800">원영적 사고로 쓰는 나만의 감사일기</p>
+        </header>
+
+        <section class="bg-white/70 backdrop-blur-sm p-6 rounded-xl shadow-md mb-8">
+            <h2 class="text-2xl font-bold text-orange-500 mb-3 text-center">✨ '원영적 사고'가 뭐예요?</h2>
+            <p class="text-center text-gray-700 leading-relaxed">
+                '원영적 사고'는 어떤 일이 생겨도 "결국 나에게는 좋은 일이야!"라고 긍정적으로 생각하는 멋진 마음가짐이에요.
+                조금 속상한 일이 있어도, "이것 덕분에 더 좋은 일이 생길 거야! 완전 럭키비키~!" 하고 외쳐보는 거죠.
+                자, 이 마법 같은 생각으로 오늘 하루를 돌아보며 감사일기를 써볼까요?
+            </p>
+        </section>
+
+        <main>
+            <div id="tab-container" class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 mb-6">
+                <button data-id="event" class="tab-button w-full p-3 text-sm sm:text-base rounded-lg bg-white hover:bg-orange-200 transition-all duration-200 shadow">사건 전환형</button>
+                <button data-id="gratitude" class="tab-button w-full p-3 text-sm sm:text-base rounded-lg bg-white hover:bg-orange-200 transition-all duration-200 shadow">감사 나열형</button>
+                <button data-id="emotion" class="tab-button w-full p-3 text-sm sm:text-base rounded-lg bg-white hover:bg-orange-200 transition-all duration-200 shadow">감정 전환형</button>
+                <button data-id="future" class="tab-button w-full p-3 text-sm sm:text-base rounded-lg bg-white hover:bg-orange-200 transition-all duration-200 shadow">미래 다짐형</button>
+            </div>
+
+            <div id="content-area">
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        const frameworks = {
+            event: {
+                title: '✨ 사건 전환형 (럭키비키 사고)',
+                description: '오늘 겪은 일을 긍정적으로 바꿔서 써봐요.',
+                prompts: [
+                    '<strong>오늘 내가 겪은 일은</strong> (어떤 일이었나요?)',
+                    '<strong>그때 나는</strong> (어떤 기분이 들었나요?)',
+                    '<strong>그런데 곰곰이 생각해 보니</strong> (왜 좋은 점이 있었나요?)',
+                    '<strong>그래서 나는 앞으로</strong> (무엇을 다짐하게 되었나요?)',
+                    '<strong>정말 럭키비키!</strong>'
+                ],
+                example: {
+                    title: '예시 1 - 사건 전환형',
+                    content: '오늘 친구와 축구를 하다가 내가 실수로 공을 밖으로 차버려서 경기를 지고 말았어요. 그때는 너무 미안하고 속상했어요. 하지만 집에 와서 생각해 보니, 친구와 함께 땀 흘리며 놀 수 있었다는 사실에 감사했어요. 친구가 실수를 이해해 주어 더 고마웠고요. 앞으로는 더 열심히 연습해서 팀에 도움이 되는 선수가 되기로 다짐했어요. 이렇게 생각하니 실수를 통해 성장할 수 있었으니, 정말 럭키비키!'
+                }
+            },
+            gratitude: {
+                title: '📝 감사 나열형',
+                description: '오늘 하루 감사한 일 세 가지를 찾아 써봐요.',
+                prompts: [
+                    '<strong>오늘 나는 세 가지 감사한 일을 찾았어요.</strong>',
+                    '1. (무엇에 감사하나요?) <strong>이유는</strong> (왜 감사한가요?)',
+                    '2. (무엇에 감사하나요?) <strong>이유는</strong> (왜 감사한가요?)',
+                    '3. (무엇에 감사하나요?) <strong>이유는</strong> (왜 감사한가요?)',
+                    '<strong>이 중에서 가장 감사한 일은</strong> (가장 기억에 남는 감사한 일은 무엇인가요?)',
+                    '<strong>왜냐하면</strong> (왜 가장 마음에 남았나요?)',
+                    '<strong>정말 럭키비키!</strong>'
+                ],
+                example: {
+                    title: '예시 2 - 감사 나열형',
+                    content: '오늘 나는 세 가지 감사한 일을 찾았어요. 첫째, 학교 급식으로 내가 좋아하는 닭볶음탕이 나와서 정말 감사했어요. 둘째, 어제 잃어버렸던 지우개를 오늘 책상 서랍에서 다시 찾아서 감사했어요. 셋째, 미술 시간에 선생님이 내 그림을 보시고 "색깔을 정말 잘 썼구나!" 하고 칭찬해 주셔서 고마웠어요. 이 중에서 가장 감사한 건 선생님의 칭찬이에요. 칭찬을 들으니 자신감이 생겨서 다음에도 멋진 그림을 그리고 싶다는 마음이 들었어요. 정말 럭키비키!'
+                }
+            },
+            emotion: {
+                title: '💖 감정 전환형',
+                description: '속상한 감정을 좋은 경험으로 바꿔서 써봐요.',
+                prompts: [
+                    '<strong>나는 오늘</strong> (무엇 때문에 속상했나요?) <strong>때문에 속상했다.</strong>',
+                    '<strong>하지만 그 일을 덕분에</strong> (어떤 것을 배웠나요?) <strong>하게 되었다.</strong>',
+                    '<strong>그래서 결국 나에게는</strong> (어떤 경험이 되었나요?) <strong>경험이 되었다.</strong>',
+                    '<strong>정말 럭키비키~!</strong>'
+                ],
+                example: {
+                    title: '예시 3 - 감정 전환형',
+                    content: '오늘 받아쓰기 시험에서 두 개나 틀려서 속상했어요. 하지만 그 일을 덕분에 내가 헷갈리는 낱말이 무엇인지 정확히 알게 되었어요. 그래서 결국 나에게는 약점을 보완할 수 있는 좋은 경험이 되었어요. 럭키비키~!'
+                }
+            },
+            future: {
+                title: '🚀 미래 다짐형',
+                description: '오늘의 경험을 통해 앞으로 어떻게 할지 다짐하는 글을 써봐요.',
+                prompts: [
+                    '<strong>오늘 나는</strong> (어떤 일이 있었나요?) <strong>일이 있었다.</strong>',
+                    '<strong>덕분에 나는</strong> (무엇을 느꼈나요?) <strong>를 느꼈다.</strong>',
+                    '<strong>앞으로는 비슷한 일이 생기면</strong> (어떻게 해볼까요?) <strong>하려고 한다.</strong>',
+                    '<strong>이렇게 생각하니 나는 참 운이 좋은 것 같다.</strong>',
+                    '<strong>정말 럭키비키!</strong>'
+                ],
+                example: {
+                    title: '예시 4 - 미래 다짐형',
+                    content: '오늘 나는 동생이랑 장난감 때문에 다퉜어요. 순간 화가 났지만, 덕분에 나는 양보하는 마음에 대해 다시 생각하게 되었어요. 앞으로는 비슷한 일이 생기면 동생에게 먼저 양보하고, 함께 노는 즐거움을 느끼려고 해요. 이렇게 생각하니 나는 참 운이 좋은 것 같아요. 럭키비키!'
+                }
+            }
+        };
+
+        const tabContainer = document.getElementById('tab-container');
+        const contentArea = document.getElementById('content-area');
+        const tabButtons = document.querySelectorAll('.tab-button');
+        let currentFrameworkId = 'event';
+
+        function renderContent(id) {
+            const framework = frameworks[id];
+            if (!framework) return;
+
+            const promptsHtml = framework.prompts.map(p => `<li>${p}</li>`).join('');
+
+            const html = `
+                <div class="content-card">
+                    <h3 class="text-2xl font-bold text-amber-700">${framework.title}</h3>
+                    <p class="text-gray-600 mt-1 mb-4">${framework.description}</p>
+                    
+                    <div class="mb-6">
+                        <h4 class="font-bold text-lg mb-2 text-gray-700">✍️ 이렇게 써봐요!</h4>
+                        <ul class="prompt-list space-y-2 text-gray-800">
+                            ${promptsHtml}
+                        </ul>
+                    </div>
+
+                    <div class="example-box">
+                        <h4 class="font-bold text-lg mb-2 text-green-700">${framework.example.title}</h4>
+                        <p class="text-gray-700 leading-relaxed">${framework.example.content}</p>
+                    </div>
+
+                    <div class="mt-6">
+                        <h4 class="font-bold text-lg mb-2 text-gray-700">✏️ 이제 내가 쓸 차례!</h4>
+                        <textarea id="journal-entry" class="w-full h-48 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-orange-300 transition" placeholder="여기에 오늘의 럭키비키 일기를 써보세요..."></textarea>
+                        <div class="flex justify-end mt-2">
+                             <button id="copy-button" class="px-4 py-2 bg-teal-500 text-white font-semibold rounded-lg hover:bg-teal-600 transition shadow">내 글 복사하기</button>
+                        </div>
+                        <p id="copy-message" class="text-right text-sm text-teal-600 mt-1 h-4"></p>
+                    </div>
+                </div>
+            `;
+            contentArea.innerHTML = html;
+            
+            const copyButton = document.getElementById('copy-button');
+            const journalEntry = document.getElementById('journal-entry');
+            const copyMessage = document.getElementById('copy-message');
+
+            copyButton.addEventListener('click', () => {
+                if (journalEntry.value) {
+                    try {
+                        const tempTextArea = document.createElement('textarea');
+                        tempTextArea.value = journalEntry.value;
+                        document.body.appendChild(tempTextArea);
+                        tempTextArea.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(tempTextArea);
+                        
+                        copyMessage.textContent = '복사되었어요!';
+                        setTimeout(() => { copyMessage.textContent = ''; }, 2000);
+                    } catch (err) {
+                        copyMessage.textContent = '복사에 실패했어요.';
+                         setTimeout(() => { copyMessage.textContent = ''; }, 2000);
+                    }
+                } else {
+                    copyMessage.textContent = '먼저 일기를 작성해주세요!';
+                    setTimeout(() => { copyMessage.textContent = ''; }, 2000);
+                }
+            });
+        }
+
+        function updateActiveTab(id) {
+            tabButtons.forEach(button => {
+                if (button.dataset.id === id) {
+                    button.classList.add('active');
+                } else {
+                    button.classList.remove('active');
+                }
+            });
+        }
+        
+        tabContainer.addEventListener('click', (e) => {
+            if (e.target.matches('.tab-button')) {
+                const id = e.target.dataset.id;
+                currentFrameworkId = id;
+                renderContent(id);
+                updateActiveTab(id);
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderContent(currentFrameworkId);
+            updateActiveTab(currentFrameworkId);
+        });
+
+    </script>
+</body>
+</html>
