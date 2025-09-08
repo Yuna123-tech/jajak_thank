@@ -94,6 +94,10 @@
                 example: {
                     title: '예시 1 - 사건 전환형',
                     content: '오늘 친구와 축구를 하다가 내가 실수로 공을 밖으로 차버려서 경기를 지고 말았어요. 그때는 너무 미안하고 속상했어요. 하지만 집에 와서 생각해 보니, 친구와 함께 땀 흘리며 놀 수 있었다는 사실에 감사했어요. 친구가 실수를 이해해 주어 더 고마웠고요. 앞으로는 더 열심히 연습해서 팀에 도움이 되는 선수가 되기로 다짐했어요. 이렇게 생각하니 실수를 통해 성장할 수 있었으니, 정말 럭키비키!'
+                },
+                evaluation: {
+                    title: '긍정적 사고 전환',
+                    criteria: "'처음의 속상함'이 '어떤 좋은 점'으로 바뀌었는지 논리적으로 연결되었나요?"
                 }
             },
             gratitude: {
@@ -111,6 +115,10 @@
                 example: {
                     title: '예시 2 - 감사 나열형',
                     content: '오늘 나는 세 가지 감사한 일을 찾았어요. 첫째, 학교 급식으로 내가 좋아하는 닭볶음탕이 나와서 정말 감사했어요. 둘째, 어제 잃어버렸던 지우개를 오늘 책상 서랍에서 다시 찾아서 감사했어요. 셋째, 미술 시간에 선생님이 내 그림을 보시고 "색깔을 정말 잘 썼구나!" 하고 칭찬해 주셔서 고마웠어요. 이 중에서 가장 감사한 건 선생님의 칭찬이에요. 칭찬을 들으니 자신감이 생겨서 다음에도 멋진 그림을 그리고 싶다는 마음이 들었어요. 정말 럭키비키!'
+                },
+                evaluation: {
+                    title: '구체적인 감사 이유',
+                    criteria: "세 가지 감사한 일 각각에 대해 '왜 감사한지' 구체적인 이유가 담겨있나요? 가장 마음에 남는 이유도 잘 설명되었나요?"
                 }
             },
             emotion: {
@@ -125,6 +133,10 @@
                 example: {
                     title: '예시 3 - 감정 전환형',
                     content: '오늘 받아쓰기 시험에서 두 개나 틀려서 속상했어요. 하지만 그 일을 덕분에 내가 헷갈리는 낱말이 무엇인지 정확히 알게 되었어요. 그래서 결국 나에게는 약점을 보완할 수 있는 좋은 경험이 되었어요. 럭키비키~!'
+                },
+                evaluation: {
+                    title: '감정의 변화와 깨달음',
+                    criteria: "'속상했던 감정'이 '배움'이나 '긍정적 경험'으로 어떻게 변했는지 솔직하게 표현했나요?"
                 }
             },
             future: {
@@ -140,6 +152,10 @@
                 example: {
                     title: '예시 4 - 미래 다짐형',
                     content: '오늘 나는 동생이랑 장난감 때문에 다퉜어요. 순간 화가 났지만, 덕분에 나는 양보하는 마음에 대해 다시 생각하게 되었어요. 앞으로는 비슷한 일이 생기면 동생에게 먼저 양보하고, 함께 노는 즐거움을 느끼려고 해요. 이렇게 생각하니 나는 참 운이 좋은 것 같아요. 럭키비키!'
+                },
+                evaluation: {
+                    title: '오늘의 경험과 내일의 다짐',
+                    criteria: "오늘 겪은 일에서 느낀 점을 바탕으로 '앞으로 어떻게 행동할지' 구체적인 다짐이 담겨있나요?"
                 }
             }
         };
@@ -179,6 +195,14 @@
                              <button id="copy-button" class="px-4 py-2 bg-teal-500 text-white font-semibold rounded-lg hover:bg-teal-600 transition shadow">내 글 복사하기</button>
                         </div>
                         <p id="copy-message" class="text-right text-sm text-teal-600 mt-1 h-4"></p>
+                    </div>
+                    
+                    <div class="mt-6">
+                        <h4 class="font-bold text-lg mb-2 text-gray-700">🌟 평가 기준</h4>
+                        <div class="p-4 bg-lime-50 rounded-lg border-l-4 border-lime-400">
+                            <p class="font-semibold text-gray-800">${framework.evaluation.title}</p>
+                            <p class="text-sm mt-1 text-gray-700">${framework.evaluation.criteria}</p>
+                        </div>
                     </div>
                 </div>
             `;
